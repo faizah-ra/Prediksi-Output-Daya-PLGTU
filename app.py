@@ -30,7 +30,7 @@ r2_val = r2_score(y, y_pred_all)
 
 # UI Streamlit
 st.set_page_config(page_title="Prediksi Daya Listrik - CCPP", layout="centered")
-st.title("🔌 Prediksi Daya Listrik Pembangkit Listrik Siklus Gabungan (CCPP)")
+st.title("🔌 Prediksi Output Daya pada Pembangkit Listrik Tenaga Gas dan Uap (PLTGU)")
 st.markdown("Menggunakan **Gradient Boosting Regressor** berdasarkan kondisi lingkungan.")
 
 # Sidebar input
