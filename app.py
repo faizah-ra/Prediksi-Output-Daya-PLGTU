@@ -50,10 +50,10 @@ st.write(f"**Akurasi model (R² Score):** `{r2_val:.4f}`")
 
 # Cek apakah input pernah ada di data asli
 df_match = df[
-    (df['AT'].round(2) == round(at, 2)) &
-    (df['V'].round(2) == round(v, 2)) &
-    (df['AP'].round(2) == round(ap, 2)) &
-    (df['RH'].round(2) == round(rh, 2))
+    (df['AT'].round(2) == round(at, 2)) &       # Temperature in °C
+    (df['V'].round(2) == round(v, 2)) &         # Exhaust Vacuum in mmHg
+    (df['AP'].round(2) == round(ap, 2)) &       # Ambient Pressure in hPa
+    (df['RH'].round(2) == round(rh, 2))         # Relative Humidity in %
 ]
 
 if not df_match.empty:
