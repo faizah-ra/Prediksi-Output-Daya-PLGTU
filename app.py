@@ -52,10 +52,27 @@ if page == "🔍 Prediksi":
         pred_pe = model.predict(X_new)[0]
 
         st.subheader("💡 Hasil Prediksi")
-        st.write(f"**Prediksi Net Hourly Electrical Energy Output (PE):** `{pred_pe:.2f} MW`")
+        avg_pe = df['PE'].mean()
+        st.metric(label="Prediksi Output Energi Listrik (PE)", value=f"{pred_pe:.2f} MW")
 
-        # Evaluasi model (global, dari training set)
-        st.markdown("#### ⚙️ Evaluasi Model (Global)")
+        # Rekomendasi berdasarkan hasil prediksi
+        if pred_pe < avg_pe - 10:
+            st.info("⚠️ Prediksi daya lebih rendah dari rata-rata historis. Mungkin kondisi lingkungan tidak optimal.")
+        elif pred_pe > avg_pe + 10:
+            st.success("✅ Prediksi daya di atas rata-rata. Kondisi lingkungan kemungkinan mendukung kinerja optimal.")
+        else:
+            st.warning("ℹ️ Prediksi daya berada dalam kisaran rata-rata. Kinerja stabil, tapi tidak maksimum.")
+
+        # Evaluasi model
+        st.markdown("#### ⚙️ Evaluasi Model")
+        st.write("""
+        Evaluasi model dilakukan untuk mengetahui seberapa akurat model dalam memprediksi output energi berdasarkan data historis.
+        
+        **Penjelasan metrik evaluasi:**
+        - **R² Score:** Seberapa baik model menjelaskan variansi data (semakin mendekati 1, semakin baik)
+        - **MAE (Mean Absolute Error):** Rata-rata selisih absolut antara prediksi dan data aktual
+        - **RMSE (Root Mean Squared Error):** Akar dari rata-rata kesalahan kuadrat (lebih sensitif terhadap outlier)
+        """)
         st.write(f"**R² Score:** `{r2_val:.4f}`")
         st.write(f"**MAE:** `{mae_val:.2f} MW`")
         st.write(f"**RMSE:** `{rmse_val:.2f} MW`")
@@ -76,11 +93,18 @@ if page == "🔍 Prediksi":
         else:
             st.warning("⚠️ Data input ini tidak ditemukan dalam dataset asli, nilai aktual tidak tersedia.")
 
-        # Visualisasi hasil prediksi dalam distribusi
+        # Visualisasi distribusi data PE
         st.subheader("📊 Distribusi Data PE")
+        st.markdown("""
+        Visualisasi berikut menunjukkan sebaran output energi listrik (PE) dari data historis.
+        Garis merah menunjukkan posisi prediksi Anda pada distribusi ini, dan garis hijau menunjukkan rata-rata seluruh data.
+        
+        Ini membantu Anda melihat apakah prediksi termasuk nilai umum, rendah, atau sangat tinggi.
+        """)
         fig, ax = plt.subplots(figsize=(10, 4))
         sns.histplot(df['PE'], bins=50, kde=True, ax=ax, color='skyblue')
         ax.axvline(pred_pe, color='red', linestyle='--', label='Prediksi Anda')
+        ax.axvline(avg_pe, color='green', linestyle='--', label='Rata-rata Data')
         ax.set_title("Distribusi Output Energi Listrik (PE)")
         ax.set_xlabel("PE (MW)")
         ax.legend()
@@ -105,8 +129,9 @@ Aplikasi ini bertujuan untuk **memprediksi output energi listrik (PE)** dari pem
 ### 📊 Output
 - Prediksi daya listrik (dalam megawatt)
 - Evaluasi model: R², MAE, dan RMSE
+- Rekomendasi hasil dan distribusi data
 
-### 🧾 Catatan
+### 📌 Catatan
 - Prediksi berbasis input user dan bisa dibandingkan dengan data asli jika tersedia
 - Cocok untuk simulasi efisiensi dan studi performa PLTGU
 
