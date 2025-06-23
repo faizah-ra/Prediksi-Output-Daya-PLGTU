@@ -19,13 +19,15 @@ def load_model():
 def load_data():
     return pd.read_excel("Folds5x2_pp.xlsx")
 
+@st.cache_data
+def load_test_data():
+    X_test = pd.read_csv("X_test.csv")
+    y_test = pd.read_csv("y_test.csv")
+    return X_test, y_test
+
 model = load_model()
 df = load_data()
-
-# Split fitur dan target
-X = df[['AT', 'V', 'AP', 'RH']]
-y = df['PE']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_test, y_test = load_test_data()
 
 # Evaluasi model pada test set
 y_pred_test = model.predict(X_test)
