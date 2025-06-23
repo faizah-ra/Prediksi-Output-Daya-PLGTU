@@ -136,6 +136,4 @@ Aplikasi ini bertujuan untuk **memprediksi output energi listrik (PE)** dari pem
 - Cocok untuk simulasi efisiensi dan studi performa PLTGU
 
 ---
-
-Made with ❤️ by [faizah-ra](https://github.com/faizah-ra)
 """)
