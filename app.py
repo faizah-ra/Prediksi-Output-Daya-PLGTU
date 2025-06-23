@@ -5,6 +5,7 @@ import joblib
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.model_selection import train_test_split
 
 # --- Konfigurasi dasar aplikasi ---
 st.set_page_config(page_title="Prediksi Daya Listrik - PLTGU", layout="centered")
@@ -24,12 +25,13 @@ df = load_data()
 # Split fitur dan target
 X = df[['AT', 'V', 'AP', 'RH']]
 y = df['PE']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Evaluasi model secara umum
-y_pred_all = model.predict(X)
-r2_val = r2_score(y, y_pred_all)
-mae_val = mean_absolute_error(y, y_pred_all)
-rmse_val = np.sqrt(mean_squared_error(y, y_pred_all))
+# Evaluasi model pada test set
+y_pred_test = model.predict(X_test)
+r2_val = r2_score(y_test, y_pred_test)
+mae_val = mean_absolute_error(y_test, y_pred_test)
+rmse_val = np.sqrt(mean_squared_error(y_test, y_pred_test))
 
 # --- Navigasi Halaman ---
 page = st.sidebar.selectbox("📁 Pilih Halaman", ["🔍 Prediksi", "ℹ️ Tentang Aplikasi"])
@@ -69,7 +71,7 @@ if page == "🔍 Prediksi":
         # Evaluasi model
         st.markdown("#### ⚙️ Evaluasi Model")
         st.write("""
-Evaluasi model dilakukan untuk mengetahui seberapa akurat model dalam memprediksi output energi berdasarkan data historis.
+Evaluasi model dilakukan untuk mengetahui seberapa akurat model dalam memprediksi output energi berdasarkan data uji (test set).
 
 **Penjelasan metrik evaluasi:**
 - **R² Score:** Seberapa baik model menjelaskan variansi data (semakin mendekati 1, semakin baik)
@@ -140,7 +142,7 @@ Aplikasi ini bertujuan untuk **memprediksi output energi listrik (PE)** dari pem
 
 ### 📊 Output
 - Prediksi daya listrik (dalam megawatt)
-- Evaluasi model: R², MAE, dan RMSE
+- Evaluasi model: R², MAE, dan RMSE (berdasarkan data uji)
 - Rekomendasi hasil dan distribusi data
 
 ### 📌 Catatan
