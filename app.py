@@ -4,19 +4,20 @@ import numpy as np
 import joblib
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.metrics import r2_score
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
-# Load model dan data
+# --- Konfigurasi dasar aplikasi ---
+st.set_page_config(page_title="Prediksi Daya Listrik - PLTGU", layout="centered")
+
+# --- Load Model dan Data ---
 @st.cache_resource
 def load_model():
     return joblib.load("model_gradient_boosting.pkl")
 
 @st.cache_data
 def load_data():
-    df = pd.read_excel("Folds5x2_pp.xlsx")
-    return df
+    return pd.read_excel("Folds5x2_pp.xlsx")
 
-# Load semua resource
 model = load_model()
 df = load_data()
 
@@ -24,55 +25,92 @@ df = load_data()
 X = df[['AT', 'V', 'AP', 'RH']]
 y = df['PE']
 
-# Hitung skor model untuk informasi
+# Evaluasi model secara umum
 y_pred_all = model.predict(X)
 r2_val = r2_score(y, y_pred_all)
+mae_val = mean_absolute_error(y, y_pred_all)
+rmse_val = np.sqrt(mean_squared_error(y, y_pred_all))
 
-# UI Streamlit
-st.set_page_config(page_title="Prediksi Daya Listrik - CCPP", layout="centered")
-st.title("🔌 Prediksi Output Daya pada Pembangkit Listrik Tenaga Gas dan Uap (PLTGU)")
-st.markdown("Menggunakan **Gradient Boosting Regressor** berdasarkan kondisi lingkungan.")
+# --- Navigasi Halaman ---
+page = st.sidebar.selectbox("📁 Pilih Halaman", ["🔍 Prediksi", "ℹ️ Tentang Aplikasi"])
 
-# Sidebar input
-st.sidebar.header("Input Kondisi Lingkungan")
-at = st.sidebar.number_input("Ambient Temperature (AT) °C", min_value=0.0, max_value=50.0, value=25.0, step=0.1)
-v = st.sidebar.number_input("Exhaust Vacuum (V) cm Hg", min_value=20.0, max_value=100.0, value=40.0, step=0.1)
-ap = st.sidebar.number_input("Ambient Pressure (AP) mbar", min_value=900.0, max_value=1100.0, value=1013.0, step=0.1)
-rh = st.sidebar.number_input("Relative Humidity (RH) %", min_value=10.0, max_value=100.0, value=60.0, step=0.1)
+# === Halaman Prediksi ===
+if page == "🔍 Prediksi":
+    st.title("🔌 Prediksi Output Daya PLTGU")
+    st.markdown("Masukkan data kondisi lingkungan untuk memprediksi output energi listrik (PE). Model menggunakan **Gradient Boosting Regressor**.")
 
-# Prediksi
-X_new = np.array([[at, v, ap, rh]])
-pred_pe = model.predict(X_new)[0]
+    # Sidebar input
+    st.sidebar.header("Input Kondisi Lingkungan")
+    at = st.sidebar.number_input("Ambient Temperature (AT) °C", min_value=0.0, max_value=50.0, value=25.0, step=0.1)
+    v = st.sidebar.number_input("Exhaust Vacuum (V) cm Hg", min_value=20.0, max_value=100.0, value=40.0, step=0.1)
+    ap = st.sidebar.number_input("Ambient Pressure (AP) mbar", min_value=900.0, max_value=1100.0, value=1013.0, step=0.1)
+    rh = st.sidebar.number_input("Relative Humidity (RH) %", min_value=10.0, max_value=100.0, value=60.0, step=0.1)
 
-st.subheader("💡 Hasil Prediksi")
-st.write(f"**Prediksi Net Hourly Electrical Energy Output (PE):** `{pred_pe:.2f} MW`")
-st.write(f"**Akurasi model (R² Score):** `{r2_val:.4f}`")
+    # Tombol prediksi
+    if st.button("🔎 Prediksi"):
+        X_new = np.array([[at, v, ap, rh]])
+        pred_pe = model.predict(X_new)[0]
 
-# Cek apakah input pernah ada di data asli
-df_match = df[
-    (df['AT'].round(2) == round(at, 2)) &       # Temperature in °C
-    (df['V'].round(2) == round(v, 2)) &         # Exhaust Vacuum in mmHg
-    (df['AP'].round(2) == round(ap, 2)) &       # Ambient Pressure in hPa
-    (df['RH'].round(2) == round(rh, 2))         # Relative Humidity in %
-]
+        st.subheader("💡 Hasil Prediksi")
+        st.write(f"**Prediksi Net Hourly Electrical Energy Output (PE):** `{pred_pe:.2f} MW`")
 
-if not df_match.empty:
-    actual_pe = df_match['PE'].values[0]
-    error = abs(actual_pe - pred_pe)
-    st.success(f"🎯 Nilai aktual PE dari dataset: **{actual_pe:.2f} MW**")
-    st.info(f"Selisih absolut prediksi vs aktual: **{error:.2f} MW**")
-else:
-    st.warning("⚠️ Data input ini tidak ditemukan dalam dataset asli, nilai aktual tidak tersedia.")
+        # Evaluasi model (global, dari training set)
+        st.markdown("#### ⚙️ Evaluasi Model (Global)")
+        st.write(f"**R² Score:** `{r2_val:.4f}`")
+        st.write(f"**MAE:** `{mae_val:.2f} MW`")
+        st.write(f"**RMSE:** `{rmse_val:.2f} MW`")
 
-# Visualisasi
-st.subheader("📊 Visualisasi Data PE")
-fig, ax = plt.subplots(figsize=(10, 4))
-sns.histplot(df['PE'], bins=50, kde=True, ax=ax, color='skyblue')
-ax.axvline(pred_pe, color='red', linestyle='--', label='Prediksi Anda')
-ax.set_title("Distribusi Output Energi Listrik (PE)")
-ax.set_xlabel("PE (MW)")
-ax.legend()
-st.pyplot(fig)
+        # Cek apakah input ada di data asli
+        df_match = df[
+            (df['AT'].round(2) == round(at, 2)) &
+            (df['V'].round(2) == round(v, 2)) &
+            (df['AP'].round(2) == round(ap, 2)) &
+            (df['RH'].round(2) == round(rh, 2))
+        ]
 
-st.markdown("---")
-st.caption("Sumber data: UCI CCPP | Dibuat oleh [faizah-ra](https://github.com/faizah-ra)")
+        if not df_match.empty:
+            actual_pe = df_match['PE'].values[0]
+            error = abs(actual_pe - pred_pe)
+            st.success(f"🎯 Nilai aktual PE dari dataset: **{actual_pe:.2f} MW**")
+            st.info(f"Selisih absolut prediksi vs aktual: **{error:.2f} MW**")
+        else:
+            st.warning("⚠️ Data input ini tidak ditemukan dalam dataset asli, nilai aktual tidak tersedia.")
+
+        # Visualisasi hasil prediksi dalam distribusi
+        st.subheader("📊 Distribusi Data PE")
+        fig, ax = plt.subplots(figsize=(10, 4))
+        sns.histplot(df['PE'], bins=50, kde=True, ax=ax, color='skyblue')
+        ax.axvline(pred_pe, color='red', linestyle='--', label='Prediksi Anda')
+        ax.set_title("Distribusi Output Energi Listrik (PE)")
+        ax.set_xlabel("PE (MW)")
+        ax.legend()
+        st.pyplot(fig)
+
+# === Halaman Tentang Aplikasi ===
+elif page == "ℹ️ Tentang Aplikasi":
+    st.title("ℹ️ Tentang Aplikasi Prediksi PLTGU")
+    st.markdown("""
+Aplikasi ini bertujuan untuk **memprediksi output energi listrik (PE)** dari pembangkit listrik tenaga gas dan uap (PLTGU) menggunakan **machine learning**.
+
+### 🧠 Model yang Digunakan
+- **Gradient Boosting Regressor**
+- Dilatih menggunakan dataset dari [UCI CCPP Dataset](https://archive.ics.uci.edu/ml/datasets/combined+cycle+power+plant)
+
+### 📥 Input yang Dibutuhkan
+- **AT** (Ambient Temperature): Suhu lingkungan sekitar
+- **V** (Exhaust Vacuum): Tekanan vakum buangan
+- **AP** (Ambient Pressure): Tekanan udara sekitar
+- **RH** (Relative Humidity): Kelembapan udara
+
+### 📊 Output
+- Prediksi daya listrik (dalam megawatt)
+- Evaluasi model: R², MAE, dan RMSE
+
+### 🧾 Catatan
+- Prediksi berbasis input user dan bisa dibandingkan dengan data asli jika tersedia
+- Cocok untuk simulasi efisiensi dan studi performa PLTGU
+
+---
+
+Made with ❤️ by [faizah-ra](https://github.com/faizah-ra)
+""")
