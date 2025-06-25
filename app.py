@@ -45,10 +45,10 @@ if page == "🔍 Prediksi":
 
     # Sidebar input
     st.sidebar.header("Input Kondisi Lingkungan")
-    at = st.sidebar.number_input("Ambient Temperature (AT) °C", min_value=0.0, max_value=50.0, value=25.0, step=0.1)
-    v = st.sidebar.number_input("Exhaust Vacuum (V) cm Hg", min_value=20.0, max_value=100.0, value=40.0, step=0.1)
-    ap = st.sidebar.number_input("Ambient Pressure (AP) mbar", min_value=900.0, max_value=1100.0, value=1013.0, step=0.1)
-    rh = st.sidebar.number_input("Relative Humidity (RH) %", min_value=10.0, max_value=100.0, value=60.0, step=0.1)
+    at = st.sidebar.number_input("Suhu Lingkungan Sekitar (AT) °C", min_value=0.0, max_value=50.0, value=25.0, step=0.1)
+    v = st.sidebar.number_input("Tekanan Vakum Buangan (V) cm Hg", min_value=20.0, max_value=100.0, value=40.0, step=0.1)
+    ap = st.sidebar.number_input("Tekanan Udara Sekitar (AP) mbar", min_value=900.0, max_value=1100.0, value=1013.0, step=0.1)
+    rh = st.sidebar.number_input("Kelembapan Udara (RH) %", min_value=10.0, max_value=100.0, value=60.0, step=0.1)
 
     # Tombol prediksi
     if st.button("🔎 Prediksi"):
@@ -137,10 +137,10 @@ Aplikasi ini bertujuan untuk **memprediksi output energi listrik (PE)** dari pem
 - Dilatih menggunakan dataset dari [UCI CCPP Dataset](https://archive.ics.uci.edu/ml/datasets/combined+cycle+power+plant)
 
 ### 📥 Input yang Dibutuhkan
-- **AT** (Ambient Temperature): Suhu lingkungan sekitar
-- **V** (Exhaust Vacuum): Tekanan vakum buangan
-- **AP** (Ambient Pressure): Tekanan udara sekitar
-- **RH** (Relative Humidity): Kelembapan udara
+- **AT** (Suhu Lingkungan Sekitar)
+- **V** (Tekanan Vakum Buangan)
+- **AP** (Tekanan Udara Sekitar)
+- **RH** (Kelembapan Udara)
 
 ### 📊 Output
 - Prediksi daya listrik (dalam megawatt)
