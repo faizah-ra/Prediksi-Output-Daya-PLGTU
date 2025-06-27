@@ -41,14 +41,14 @@ page = st.sidebar.selectbox("📁 Pilih Halaman", ["🔍 Prediksi", "ℹ️ Tent
 # === Halaman Prediksi ===
 if page == "🔍 Prediksi":
     st.title("🔌 Prediksi Daya Listrik pada PLTGU")
-    st.markdown("Masukkan data kondisi lingkungan untuk memprediksi **daya listrik keluaran (PE)**. Model ini menggunakan algoritma **Gradient Boosting Regressor**.")
+    st.markdown("Masukkan data kondisi lingkungan untuk memprediksi **daya listrik keluaran**. Model ini menggunakan algoritma **Gradient Boosting Regression**.")
 
     # Sidebar input
     st.sidebar.header("Input Parameter Lingkungan")
-    at = st.sidebar.number_input("Suhu Udara Sekitar (AT) °C", min_value=0.0, max_value=50.0, value=25.0, step=0.1)
-    v = st.sidebar.number_input("Tekanan Vakum Buangan (V) cm Hg", min_value=20.0, max_value=100.0, value=40.0, step=0.1)
-    ap = st.sidebar.number_input("Tekanan Udara Lingkungan (AP) mbar", min_value=900.0, max_value=1100.0, value=1013.0, step=0.1)
-    rh = st.sidebar.number_input("Kelembapan Relatif (RH) %", min_value=10.0, max_value=100.0, value=60.0, step=0.1)
+    at = st.sidebar.number_input("Suhu Udara Sekitar (°C)", min_value=0.0, max_value=50.0, value=25.0, step=0.1)
+    v = st.sidebar.number_input("Tekanan Vakum Buangan (cm Hg)", min_value=20.0, max_value=100.0, value=40.0, step=0.1)
+    ap = st.sidebar.number_input("Tekanan Udara Lingkungan (mbar)", min_value=900.0, max_value=1100.0, value=1013.0, step=0.1)
+    rh = st.sidebar.number_input("Kelembapan Relatif (%)", min_value=10.0, max_value=100.0, value=60.0, step=0.1)
 
 
     # Tombol prediksi
@@ -58,7 +58,7 @@ if page == "🔍 Prediksi":
         avg_pe = df['PE'].mean()
 
         st.subheader("💡 Hasil Prediksi")
-        st.metric(label="Prediksi Daya Listrik Keluaran(PE)", value=f"{pred_pe:.2f} MW")
+        st.metric(label="Prediksi Daya Listrik:", value=f"{pred_pe:.2f} MW")
 
         # Rekomendasi berdasarkan hasil prediksi
         if pred_pe < avg_pe - 10:
@@ -101,7 +101,7 @@ Evaluasi model dilakukan untuk mengetahui seberapa akurat model dalam memprediks
         if not df_match.empty:
             actual_pe = df_match['PE'].values[0]
             error = abs(actual_pe - pred_pe)
-            st.success(f"🎯 Nilai aktual PE dari dataset: **{actual_pe:.2f} MW**")
+            st.success(f"🎯 Nilai aktual Daya listrik dari dataset: **{actual_pe:.2f} MW**")
             st.info(f"Selisih absolut prediksi vs aktual: **{error:.2f} MW**")
         else:
             st.warning("⚠️ Data input ini tidak ditemukan dalam dataset asli, nilai aktual tidak tersedia.")
@@ -110,9 +110,9 @@ Evaluasi model dilakukan untuk mengetahui seberapa akurat model dalam memprediks
         st.markdown("---")
 
         # Visualisasi distribusi data PE
-        st.subheader("📊 Distribusi Data PE")
+        st.subheader("📊 Distribusi Data Daya Listrik")
         st.markdown("""
-Visualisasi berikut menunjukkan sebaran output energi listrik (PE) dari data historis.  
+Visualisasi berikut menunjukkan sebaran daya listrik dari data historis.  
 Garis **merah** menunjukkan posisi prediksi Anda pada distribusi ini, dan garis **hijau** menunjukkan rata-rata seluruh data.
 
 Ini membantu Anda melihat apakah prediksi termasuk nilai umum, rendah, atau sangat tinggi.
@@ -129,22 +129,22 @@ Ini membantu Anda melihat apakah prediksi termasuk nilai umum, rendah, atau sang
 
 # === Halaman Tentang Aplikasi ===
 elif page == "ℹ️ Tentang Aplikasi":
-    st.title("ℹ️ Tentang Aplikasi Prediksi PLTGU")
+    st.title("ℹ️ Tentang Aplikasi Prediksi Daya Listrik pada PLTGU")
     st.markdown("""
-Aplikasi ini bertujuan untuk **memprediksi output energi listrik (PE)** dari pembangkit listrik tenaga gas dan uap (PLTGU) menggunakan **machine learning**.
+Aplikasi ini bertujuan untuk **memprediksi daya listrik keluaran** dari pembangkit listrik tenaga gas dan uap (PLTGU) menggunakan **machine learning**.
 
 ### 🧠 Model yang Digunakan
 - **Gradient Boosting Regressor**
 - Dilatih menggunakan dataset dari [UCI CCPP Dataset](https://archive.ics.uci.edu/ml/datasets/combined+cycle+power+plant)
 
-### 📥 Input yang Dibutuhkan
-- **AT** (Suhu Udara Sekitar)
-- **V** (Tekanan Vakum Buangan)
-- **AP** (Tekanan Udara Lingkungan)
-- **RH** (Kelembapan Relatif)
+## 📥 Input yang Dibutuhkan
+- **AT** (*ambient temperature*): Suhu udara sekitar (°C)  
+- **V** (*exhaust vacuum*): Tekanan vakum buangan (cm Hg)  
+- **AP** (*ambient pressure*): Tekanan udara lingkungan (mbar)  
+- **RH** (*relative humidity*): Kelembapan relatif (%)
 
 ### 📊 Output
-- Prediksi **daya listrik keluaran (PE)** dalam megawatt (MW)
+- Prediksi **daya listrik keluaran** (*net electrical power output*, PE) dalam satuan megawatt (MW)
 - Evaluasi model: R², MAE, dan RMSE
 - Rekomendasi hasil dan distribusi data
 
