@@ -41,7 +41,7 @@ page = st.sidebar.selectbox("📁 Pilih Halaman", ["🔍 Prediksi", "ℹ️ Tent
 # === Halaman Prediksi ===
 if page == "🔍 Prediksi":
     st.title("🔌 Prediksi Daya Listrik pada PLTGU")
-    st.markdown("Masukkan data kondisi lingkungan untuk memprediksi **daya listrik*. Model ini menggunakan algoritma **Gradient Boosting Regression**.")
+    st.markdown("Masukkan data kondisi lingkungan untuk memprediksi **daya listrik**. Model ini menggunakan algoritma **Gradient Boosting Regression**.")
 
     # Sidebar input
     st.sidebar.header("Input Parameter Lingkungan")
