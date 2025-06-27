@@ -41,7 +41,7 @@ page = st.sidebar.selectbox("📁 Pilih Halaman", ["🔍 Prediksi", "ℹ️ Tent
 # === Halaman Prediksi ===
 if page == "🔍 Prediksi":
     st.title("🔌 Prediksi Daya Listrik pada PLTGU")
-    st.markdown("Masukkan data kondisi lingkungan untuk memprediksi **daya listrik keluaran**. Model ini menggunakan algoritma **Gradient Boosting Regression**.")
+    st.markdown("Masukkan data kondisi lingkungan untuk memprediksi **daya listrik*. Model ini menggunakan algoritma **Gradient Boosting Regression**.")
 
     # Sidebar input
     st.sidebar.header("Input Parameter Lingkungan")
@@ -131,7 +131,7 @@ Ini membantu Anda melihat apakah prediksi termasuk nilai umum, rendah, atau sang
 elif page == "ℹ️ Tentang Aplikasi":
     st.title("ℹ️ Tentang Aplikasi Prediksi Daya Listrik pada PLTGU")
     st.markdown("""
-Aplikasi ini bertujuan untuk **memprediksi daya listrik keluaran** dari pembangkit listrik tenaga gas dan uap (PLTGU) menggunakan **machine learning**.
+Aplikasi ini bertujuan untuk **memprediksi daya listrik** dari pembangkit listrik tenaga gas dan uap (PLTGU) menggunakan **machine learning**.
 
 ### 🧠 Model yang Digunakan
 - **Gradient Boosting Regressor**
@@ -144,7 +144,7 @@ Aplikasi ini bertujuan untuk **memprediksi daya listrik keluaran** dari pembangk
 - **RH** (*relative humidity*): Kelembapan relatif (%)
 
 ### 📊 Output
-- Prediksi **daya listrik keluaran** (*net electrical power output*, PE) dalam satuan megawatt (MW)
+- Prediksi **daya listrik** (*net electrical power output*, PE) dalam satuan megawatt (MW)
 - Evaluasi model: R², MAE, dan RMSE
 - Rekomendasi hasil dan distribusi data
 
