@@ -74,7 +74,7 @@ if page == "🔍 Prediksi":
         # Evaluasi model
         st.markdown("#### ⚙️ Evaluasi Model")
         st.write("""
-Evaluasi model dilakukan untuk mengetahui seberapa akurat model dalam memprediksi output energi berdasarkan data uji (test set).
+Evaluasi model dilakukan untuk mengetahui seberapa akurat model dalam memprediksi daya listrik berdasarkan data uji (test set).
 
 **Penjelasan metrik evaluasi:**
 - **R² Score:** Seberapa baik model menjelaskan variansi data (semakin mendekati 1, semakin baik)
@@ -122,8 +122,8 @@ Ini membantu Anda melihat apakah prediksi termasuk nilai umum, rendah, atau sang
         sns.histplot(df['PE'], bins=50, kde=True, ax=ax, color='skyblue')
         ax.axvline(pred_pe, color='red', linestyle='--', label='Prediksi Anda')
         ax.axvline(avg_pe, color='green', linestyle='--', label='Rata-rata Data')
-        ax.set_title("Distribusi Output Energi Listrik (PE)")
-        ax.set_xlabel("PE (MW)")
+        ax.set_title("Distribusi Daya Listrik")
+        ax.set_xlabel("Daya Listrik (MW)")
         ax.legend()
         st.pyplot(fig)
 
