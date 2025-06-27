@@ -8,7 +8,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
 # --- Konfigurasi dasar aplikasi ---
-st.set_page_config(page_title="Prediksi Daya Listrik - PLTGU", layout="centered")
+st.set_page_config(page_title="Prediksi Daya Listrik pada PLTGU", layout="centered")
 
 # --- Load Model dan Data ---
 @st.cache_resource
@@ -40,15 +40,16 @@ page = st.sidebar.selectbox("📁 Pilih Halaman", ["🔍 Prediksi", "ℹ️ Tent
 
 # === Halaman Prediksi ===
 if page == "🔍 Prediksi":
-    st.title("🔌 Prediksi Output Daya PLTGU")
-    st.markdown("Masukkan data kondisi lingkungan untuk memprediksi output energi listrik (PE). Model menggunakan **Gradient Boosting Regressor**.")
+    st.title("🔌 Prediksi Daya Listrik pada PLTGU")
+    st.markdown("Masukkan data kondisi lingkungan untuk memprediksi **daya listrik keluaran (PE)**. Model ini menggunakan algoritma **Gradient Boosting Regressor**.")
 
     # Sidebar input
-    st.sidebar.header("Input Kondisi Lingkungan")
-    at = st.sidebar.number_input("Suhu Lingkungan Sekitar (AT) °C", min_value=0.0, max_value=50.0, value=25.0, step=0.1)
+    st.sidebar.header("Input Parameter Lingkungan")
+    at = st.sidebar.number_input("Suhu Udara Sekitar (AT) °C", min_value=0.0, max_value=50.0, value=25.0, step=0.1)
     v = st.sidebar.number_input("Tekanan Vakum Buangan (V) cm Hg", min_value=20.0, max_value=100.0, value=40.0, step=0.1)
-    ap = st.sidebar.number_input("Tekanan Udara Sekitar (AP) mbar", min_value=900.0, max_value=1100.0, value=1013.0, step=0.1)
-    rh = st.sidebar.number_input("Kelembapan Udara (RH) %", min_value=10.0, max_value=100.0, value=60.0, step=0.1)
+    ap = st.sidebar.number_input("Tekanan Udara Lingkungan (AP) mbar", min_value=900.0, max_value=1100.0, value=1013.0, step=0.1)
+    rh = st.sidebar.number_input("Kelembapan Relatif (RH) %", min_value=10.0, max_value=100.0, value=60.0, step=0.1)
+
 
     # Tombol prediksi
     if st.button("🔎 Prediksi"):
@@ -57,7 +58,7 @@ if page == "🔍 Prediksi":
         avg_pe = df['PE'].mean()
 
         st.subheader("💡 Hasil Prediksi")
-        st.metric(label="Prediksi Output Energi Listrik (PE)", value=f"{pred_pe:.2f} MW")
+        st.metric(label="Prediksi Daya Listrik Keluaran(PE)", value=f"{pred_pe:.2f} MW")
 
         # Rekomendasi berdasarkan hasil prediksi
         if pred_pe < avg_pe - 10:
@@ -137,14 +138,14 @@ Aplikasi ini bertujuan untuk **memprediksi output energi listrik (PE)** dari pem
 - Dilatih menggunakan dataset dari [UCI CCPP Dataset](https://archive.ics.uci.edu/ml/datasets/combined+cycle+power+plant)
 
 ### 📥 Input yang Dibutuhkan
-- **AT** (Suhu Lingkungan Sekitar)
+- **AT** (Suhu Udara Sekitar)
 - **V** (Tekanan Vakum Buangan)
-- **AP** (Tekanan Udara Sekitar)
-- **RH** (Kelembapan Udara)
+- **AP** (Tekanan Udara Lingkungan)
+- **RH** (Kelembapan Relatif)
 
 ### 📊 Output
-- Prediksi daya listrik (dalam megawatt)
-- Evaluasi model: R², MAE, dan RMSE (berdasarkan data uji)
+- Prediksi **daya listrik keluaran (PE)** dalam megawatt (MW)
+- Evaluasi model: R², MAE, dan RMSE
 - Rekomendasi hasil dan distribusi data
 
 ### 📌 Catatan
