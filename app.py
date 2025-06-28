@@ -144,7 +144,7 @@ Aplikasi ini bertujuan untuk **memprediksi daya listrik** dari pembangkit listri
 - **RH** (*relative humidity*): Kelembapan relatif (%)
 
 ### 📊 Output
-- Prediksi **daya listrik** (*net electrical power output*, PE) dalam satuan megawatt (MW)
+- Prediksi **daya listrik keluaran bersih** (*net electrical power output*, PE) dalam satuan megawatt (MW)
 - Evaluasi model: R², MAE, dan RMSE
 - Rekomendasi hasil dan distribusi data
 
