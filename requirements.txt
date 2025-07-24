@@ -1,7 +1,7 @@
 scikit-learn
-joblib
-numpy
 pandas
-streamlit
-matplotlib
+numpy
+joblib
+matplotlib  
 seaborn
+openpyxl
