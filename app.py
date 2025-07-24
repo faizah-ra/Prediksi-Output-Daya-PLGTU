@@ -13,7 +13,7 @@ st.set_page_config(page_title="Prediksi Daya Listrik pada PLTGU", layout="center
 # --- Load Model dan Data ---
 @st.cache_resource
 def load_model():
-    return joblib.load("model_gradient_boosting (1).pkl")
+    return joblib.load("model_gradient_boosting.pkl")
 
 @st.cache_data
 def load_data():
