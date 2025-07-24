@@ -17,7 +17,7 @@ def load_model():
 
 @st.cache_data
 def load_data():
-    return pd.read_excel("Folds5x2_pp.xlsx")
+    return pd.read_csv("data.csv")
 
 @st.cache_data
 def load_test_data():
