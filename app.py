@@ -5,11 +5,11 @@ import joblib
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.model_selection import train_test_split
 
 # --- Konfigurasi dasar aplikasi ---
 st.set_page_config(page_title="Prediksi Daya Listrik pada PLTGU", layout="centered")
 
+# --- Load Model dan Data ---
 # --- Load Model dan Data ---
 @st.cache_resource
 def load_model():
@@ -19,21 +19,13 @@ def load_model():
 def load_data():
     return pd.read_csv("data.csv")
 
-@st.cache_data
-def load_test_data():
-    X_test = pd.read_csv("X_test.csv")
-    y_test = pd.read_csv("y_test.csv")
-    return X_test, y_test
-
 model = load_model()
 df = load_data()
-X_test, y_test = load_test_data()
 
-# Evaluasi model pada test set
-y_pred_test = model.predict(X_test)
-r2_val = r2_score(y_test, y_pred_test)
-mae_val = mean_absolute_error(y_test, y_pred_test)
-rmse_val = np.sqrt(mean_squared_error(y_test, y_pred_test))
+# Evaluasi model pada test set (nilai tetap dari IPYNB)
+r2_val = 0.9669
+mae_val = 2.10
+rmse_val = 3.00
 
 # --- Navigasi Halaman ---
 page = st.sidebar.selectbox("📁 Pilih Halaman", ["🔍 Prediksi", "ℹ️ Tentang Aplikasi"])
@@ -135,7 +127,7 @@ Aplikasi ini bertujuan untuk **memprediksi daya listrik** dari pembangkit listri
 
 ### 🧠 Model yang Digunakan
 - **Gradient Boosting Regressor**
-- Dilatih menggunakan dataset dari [UCI CCPP Dataset](https://archive.ics.uci.edu/ml/datasets/combined+cycle+power+plant)
+- Dilatih menggunakan dataset dari [UCI CCPP Dataset](https://archive.ics.uci.edu/ml/datasets/combined+cycle+power+plant) dan [CCPP Environmental Dataset 2021–2024 (GitHub)](https://github.com/rizkifirmansyahil/Combined-Cycle-Power-Plant-CCPP-Environmental-and-Power-Output-Dataset-2021-2024-)
 
 ## 📥 Input yang Dibutuhkan
 - **AT** (*ambient temperature*): Suhu udara sekitar (°C)  
